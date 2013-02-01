@@ -9,41 +9,50 @@ from numpy import *
 # Function to compute the prior distribution of the variable root from the data set
 def Prior(theData, root, noStates):
     prior = zeros((noStates[root]), float )
-# Coursework 1 task 1 should be inserted here
-    
-# end of Coursework 1 task 1
+    dataSize = len(theData)
+    for i in theData:
+      prior[i[root]] += 1/float(dataSize)
     return prior
+
 # Function to compute a CPT with parent node varP and xchild node varC from the data array
 # it is assumed that the states are designated by consecutive integers starting with 0
 def CPT(theData, varC, varP, noStates):
     cPT = zeros((noStates[varC], noStates[varP]), float )
-# Coursework 1 task 2 should be inserte4d here
-   
-# end of coursework 1 task 2
+    cAcc = zeros((noStates[varC]), float )
+    pAcc = zeros((noStates[varP]), float )
+    cAndPAcc = zeros((noStates[varC], noStates[varP]), float )
+    
+    for i in theData:
+      cAndPAcc[i[varC]][i[varP]] += 1
+      pAcc[i[varP]] += 1
+    
+    for i in range(0, len(cPT)):
+      for j in range(0, len(cPT[i])):
+        cPT[i][j] = cAndPAcc[i][j] / pAcc[j]
+        
     return cPT
+    
 # Function to calculate the joint probability table of two variables in the data set
 def JPT(theData, varRow, varCol, noStates):
     jPT = zeros((noStates[varRow], noStates[varCol]), float )
-#Coursework 1 task 3 should be inserted here 
     
-# end of coursework 1 task 3
+    for i in theData:
+      jPT[i[varRow]][i[varCol]] += 1/float(len(theData))
+    
     return jPT
 #
 # Function to convert a joint probability table to a conditional probability table
 def JPT2CPT(aJPT):
-#Coursework 1 task 4 should be inserted here 
-   
-# coursework 1 taks 4 ends here
-    return aJPT
+    aJPT = aJPT.transpose()
+    for i in aJPT:
+      i /= sum(i)
+    return aJPT.transpose()
 
-#
 # Function to query a naive Bayesian network
 def Query(theQuery, naiveBayes): 
     rootPdf = zeros((naiveBayes[0].shape[0]), float)
-# Coursework 1 task 5 should be inserted here
+    
   
-
-# end of coursework 1 task 5
     return rootPdf
 #
 # End of Coursework 1
@@ -201,11 +210,18 @@ def PrincipalComponents(theData):
 #
 noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("Neurones.txt")
 theData = array(datain)
-AppendString("results.txt","Coursework One Results by dfg")
+AppendString("results.txt","Coursework One Results jzk09")
 AppendString("results.txt","") #blank line
 AppendString("results.txt","The prior probability of node 0")
 prior = Prior(theData, 0, noStates)
 AppendList("results.txt", prior)
+cpt = CPT(theData, 2,0, noStates)
+jpt = JPT(theData, 2, 0, noStates)
+print jpt
+print("----------")
+jpt2cpt = JPT2CPT(jpt)
+print jpt2cpt
+
 #
 # continue as described
 #

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-import Image
+#import Image
 import glob, os
 import numpy
 # Function to read in data from a file in the format defined by Duncan
