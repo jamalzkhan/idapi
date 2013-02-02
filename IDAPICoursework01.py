@@ -52,6 +52,7 @@ def JPT2CPT(aJPT):
 def Query(theQuery, naiveBayes): 
     rootPdf = zeros((naiveBayes[0].shape[0]), float)
     
+    
     prior = naiveBayes[0]
     childNodes = naiveBayes[1:]
     for i in range(0, len(rootPdf)):
@@ -61,7 +62,6 @@ def Query(theQuery, naiveBayes):
         rootPdf[i] = rootPdf[i] * childNode[theQuery[j],i]
         
     total = sum(rootPdf)
-    print rootPdf
     for i in range(0, len(rootPdf)):
       rootPdf[i] = rootPdf[i]/total
     return rootPdf
