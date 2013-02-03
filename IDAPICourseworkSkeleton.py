@@ -61,7 +61,6 @@ def Query(theQuery, naiveBayes):
         rootPdf[i] = rootPdf[i] * childNode[theQuery[j],i]
         
     total = sum(rootPdf)
-    print rootPdf
     for i in range(0, len(rootPdf)):
       rootPdf[i] = rootPdf[i]/total
     return rootPdf
@@ -229,40 +228,41 @@ def PrincipalComponents(theData):
 #
 # main program part for Coursework 1
 #
-noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("Neurones.txt")
-theData = array(datain)
-AppendString("results.txt","Coursework One Results: Jamal Khan - jzk09")
-AppendString("results.txt","") #blank line
+
+def coursework1():
+  noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("Neurones.txt")
+  theData = array(datain)
+  AppendString("results.txt","Coursework One Results: Jamal Khan - jzk09")
+  AppendString("results.txt","") #blank line
 
 
-AppendString("results.txt","The prior probability distribution of node 0:")
-prior = Prior(theData, 0, noStates)
-AppendList("results.txt", prior)
+  AppendString("results.txt","The prior probability distribution of node 0:")
+  prior = Prior(theData, 0, noStates)
+  AppendList("results.txt", prior)
 
-AppendString("results.txt","The conditional probability matrix P (2|0) calculated from the data:")
-cpt = CPT(theData, 2,0, noStates)
-AppendArray("results.txt", cpt)
+  AppendString("results.txt","The conditional probability matrix P (2|0) calculated from the data:")
+  cpt = CPT(theData, 2,0, noStates)
+  AppendArray("results.txt", cpt)
 
-AppendString("results.txt","The joint probability matrix P (2&0) calculated from the data:")
-jpt = JPT(theData, 2, 0, noStates)
-AppendArray("results.txt", jpt)
+  AppendString("results.txt","The joint probability matrix P (2&0) calculated from the data:")
+  jpt = JPT(theData, 2, 0, noStates)
+  AppendArray("results.txt", jpt)
 
-AppendString("results.txt","The conditional probability matrix P (2|0) calculated from the joint probability matrix P (2&0):")
-jpt2cpt = JPT2CPT(jpt)
-AppendArray("results.txt", jpt2cpt)
+  AppendString("results.txt","The conditional probability matrix P (2|0) calculated from the joint probability matrix P (2&0):")
+  jpt2cpt = JPT2CPT(jpt)
+  AppendArray("results.txt", jpt2cpt)
 
-AppendString("results.txt","The results of queries [4,0,0,0,5] and [6, 5, 2, 5, 5] respectively on the naive network:")
+  AppendString("results.txt","The results of queries [4,0,0,0,5] and [6, 5, 2, 5, 5] respectively on the naive network:")
 
-naiveBayes = createNaiveBayes(theData, noStates, prior)
-queryA = Query([4,0,0,0,5], naiveBayes)
-AppendList("results.txt", queryA)
+  naiveBayes = createNaiveBayes(theData, noStates, prior)
+  queryA = Query([4,0,0,0,5], naiveBayes)
+  AppendList("results.txt", queryA)
 
-queryB = Query([6,5,2,5,5], naiveBayes)
-AppendList("results.txt", queryB)
-
-#
-# continue as described
-#
-#
+  queryB = Query([6,5,2,5,5], naiveBayes)
+  AppendList("results.txt", queryB)
 
 
+if __name__ == "__main__":
+  coursework1()
+  
+  
