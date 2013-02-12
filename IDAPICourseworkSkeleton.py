@@ -83,8 +83,6 @@ def createChildCPT(theData, noStates):
 def MutualInformation(jP):
     mi=0.0
 # Coursework 2 task 1 should be inserted here
-   
-
 # end of coursework 2 task 1
     return mi
 #
@@ -262,7 +260,13 @@ def coursework1():
   AppendList("results.txt", queryB)
 
 
+def coursework2():
+  noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
+  theData = array(datain)
+  print theData[1]
+  jpt = JPT(theData, 2, 0, noStates)
+
 if __name__ == "__main__":
-  coursework1()
+  coursework2()
   
   
