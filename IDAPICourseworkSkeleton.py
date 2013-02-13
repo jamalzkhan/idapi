@@ -3,6 +3,7 @@
 # Coursework in Python 
 from IDAPICourseworkLibrary import *
 from numpy import *
+
 #
 # Coursework 1 begins here
 #
@@ -82,15 +83,25 @@ def createChildCPT(theData, noStates):
 # Calculate the mutual information from the joint probability table of two variables
 def MutualInformation(jP):
     mi=0.0
-# Coursework 2 task 1 should be inserted here
-# end of coursework 2 task 1
+    for i in range(0, len(jP)):
+      for j in range(0, len(jP[i])):
+        if jP[i][j] == 0.0:
+          continue
+        Pd = jP[i][j]
+        temp = log2(Pd/(sum(jP[i])*sum(jP.transpose()[j])))
+        mi += Pd*temp
     return mi
 #
 # construct a dependency matrix for all the variables
 def DependencyMatrix(theData, noVariables, noStates):
     MIMatrix = zeros((noVariables,noVariables))
+    for i in range(0, len(MIMatrix)):
+      for j in range(0, len(MIMatrix[i])):
+        jpt = JPT(theData, i, j, noStates)
+        MIMatrix[i][j] = MutualInformation(jpt)
 # Coursework 2 task 2 should be inserted here
-    
+
+
 
 # end of coursework 2 task 2
     return MIMatrix
@@ -98,18 +109,73 @@ def DependencyMatrix(theData, noVariables, noStates):
 def DependencyList(depMatrix):
     depList=[]
 # Coursework 2 task 3 should be inserted here
-    
-
+    for i in range(0, len(depMatrix)):
+      for j in range(i+1, len(depMatrix[i])):
+        depList.append((depMatrix[i][j], i, j))
 # end of coursework 2 task 3
-    return array(depList2)
+    depList = sorted(depList, reverse=True)
+    return array(depList)
 #
 # Functions implementing the spanning tree algorithm
 # Coursework 2 task 4
+  
+def generateGraph(spanningTree, noVariables):
+  graph = {}
+  for (x, i, j) in spanningTree:
+    if not i in  graph:
+      graph[i] = []
+      graph[i].append(j)
+    else:
+      graph[i].append(j)
+    if not j in graph:
+      graph[j] = []
+      graph[j].append(i)
+    else:
+      graph[j].append(i)
+  for i in range(0, noVariables):
+    if not i in graph:
+      graph[i] = []
+    
+  return graph
+
+def bfs(x, graph):
+  visited = {}
+  xSet = []
+  q = []
+  
+  q.append(x)
+  visited[x] = True
+  
+  while q:
+    y = q.pop()
+    for i in graph[y]:
+      if not i in visited:
+        xSet.append(i)
+        q.append(i)
+        visited[i] = True
+  
+  return set(xSet)
 
 def SpanningTreeAlgorithm(depList, noVariables):
     spanningTree = []
-  
+    for (x, i, j) in depList:
+      g = generateGraph(spanningTree, noVariables)
+      setI = bfs(i, g)
+      setJ = bfs(j, g)
+      
+      if not setJ.intersection(setI):
+        spanningTree.append((x, i, j))
+    
     return array(spanningTree)
+    
+def createGraph(spanningTree, noVariables):
+  G = AGraph(strict=False)
+  for i in range(0, noVariables):
+    G.add_node(str(noVariables))
+  for (x, i, j) in spanningTree:
+    G.add_edge(str(i), str(j), str(x))
+  
+  return G
 #
 # End of coursework 2
 #
@@ -263,8 +329,19 @@ def coursework1():
 def coursework2():
   noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
   theData = array(datain)
-  print theData[1]
   jpt = JPT(theData, 2, 0, noStates)
+  MutualInformation(jpt)
+  dm = DependencyMatrix(theData, noVariables, noStates)
+  dl = DependencyList(dm)
+  #print dl
+  st = SpanningTreeAlgorithm(dl, noVariables)
+  print st
+  #g = createGraph(st)
+  #g.draw('test.png')
+  
+  #print dl
+  #AppendArray("lol.txt", dl)
+  
 
 if __name__ == "__main__":
   coursework2()
