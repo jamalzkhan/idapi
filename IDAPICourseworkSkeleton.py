@@ -3,6 +3,7 @@
 # Coursework in Python 
 from IDAPICourseworkLibrary import *
 from numpy import *
+import pygraphviz
 
 #
 # Coursework 1 begins here
@@ -169,7 +170,7 @@ def SpanningTreeAlgorithm(depList, noVariables):
     return array(spanningTree)
     
 def createGraph(spanningTree, noVariables):
-  G = AGraph(strict=False)
+  G = pygraphviz.AGraph(strict=False)
   for i in range(0, noVariables):
     G.add_node(str(noVariables))
   for (x, i, j) in spanningTree:
@@ -336,8 +337,8 @@ def coursework2():
   #print dl
   st = SpanningTreeAlgorithm(dl, noVariables)
   print st
-  #g = createGraph(st)
-  #g.draw('test.png')
+  g = createGraph(st)
+  g.draw('test.png')
   
   #print dl
   #AppendArray("lol.txt", dl)
