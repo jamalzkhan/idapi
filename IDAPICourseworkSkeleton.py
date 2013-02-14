@@ -3,7 +3,7 @@
 # Coursework in Python 
 from IDAPICourseworkLibrary import *
 from numpy import *
-import pygraphviz
+import pydot
 
 #
 # Coursework 1 begins here
@@ -103,7 +103,6 @@ def DependencyMatrix(theData, noVariables, noStates):
 # Coursework 2 task 2 should be inserted here
 
 
-
 # end of coursework 2 task 2
     return MIMatrix
 # Function to compute an ordered list of dependencies 
@@ -169,14 +168,16 @@ def SpanningTreeAlgorithm(depList, noVariables):
     
     return array(spanningTree)
     
-def createGraph(spanningTree, noVariables):
-  G = pygraphviz.AGraph(strict=False)
-  for i in range(0, noVariables):
-    G.add_node(str(noVariables))
-  for (x, i, j) in spanningTree:
-    G.add_edge(str(i), str(j), str(x))
+def makeName(number):
+  return str(int(number+1))
   
-  return G
+def createGraph(spanningTree, noVariables):
+  g = pydot.Dot(graph_type='graph')
+  for i in range(0, noVariables):
+    g.add_node(pydot.Node(makeName(i)))
+  for (x, i, j) in spanningTree:
+    g.add_edge(pydot.Edge(makeName(i), makeName(j)))#, label=str(x)))
+  return g
 #
 # End of coursework 2
 #
@@ -330,19 +331,24 @@ def coursework1():
 def coursework2():
   noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
   theData = array(datain)
-  jpt = JPT(theData, 2, 0, noStates)
-  MutualInformation(jpt)
+  
+  AppendString("results.txt","Coursework Two Results: Jamal Khan - jzk09")
+  AppendString("results.txt","") #blank line
+  
+  AppendString("results.txt","The dependency matrix for HepatitisC data set:")
   dm = DependencyMatrix(theData, noVariables, noStates)
+  AppendArray("results.txt", dm)
+  
+  AppendString("results.txt","The dependency list for HepatitisC data set:")
   dl = DependencyList(dm)
-  #print dl
+  AppendArray("results.txt", dl)
+  
+  AppendString("results.txt","The nodes for the spanning tree are: ")
   st = SpanningTreeAlgorithm(dl, noVariables)
-  print st
-  g = createGraph(st)
-  g.draw('test.png')
+  AppendArray("results.txt", st)
   
-  #print dl
-  #AppendArray("lol.txt", dl)
-  
+  g = createGraph(st, noVariables)
+  g.write_png('spanning_tree.png')
 
 if __name__ == "__main__":
   coursework2()
