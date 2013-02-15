@@ -169,7 +169,7 @@ def SpanningTreeAlgorithm(depList, noVariables):
     return array(spanningTree)
     
 def makeName(number):
-  return str(int(number+1))
+  return str(int(number))
   
 def createGraph(spanningTree, noVariables):
   g = pydot.Dot(graph_type='graph')
