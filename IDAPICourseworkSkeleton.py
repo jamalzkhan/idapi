@@ -350,7 +350,10 @@ def coursework2():
   g = createGraph(st, noVariables)
   g.write_png('spanning_tree.png')
 
+def coursework3():
+  print "Start of coursework 3"
+
 if __name__ == "__main__":
-  coursework2()
+  coursework3()
   
   
