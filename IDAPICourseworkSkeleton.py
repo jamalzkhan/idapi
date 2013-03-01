@@ -188,8 +188,18 @@ def createGraph(spanningTree, noVariables):
 def CPT_2(theData, child, parent1, parent2, noStates):
     cPT = zeros([noStates[child],noStates[parent1],noStates[parent2]], float )
 # Coursework 3 task 1 should be inserted here
-   
-
+    for i in theData:
+      cPT[i[child]][i[parent1]][i[parent2]] += 1
+    
+    for i in range(0, noStates[parent1]):
+      for j in range(0, noStates[parent2]):
+        sum = 0.0
+        for k in range(0, len(cPT)):
+          sum += cPT[k][i][j]
+        for k in range(0, len(cPT)):
+          if not sum == 0:
+            cPT[k][i][j] = cPT[k][i][j] / sum
+    print cPT
 # End of Coursework 3 task 1           
     return cPT
 #
@@ -351,7 +361,9 @@ def coursework2():
   g.write_png('spanning_tree.png')
 
 def coursework3():
-  print "Start of coursework 3"
+  noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
+  theData = array(datain)
+  cpt_2 = CPT_2(theData, 7, 1, 2, noStates)
 
 if __name__ == "__main__":
   coursework3()
