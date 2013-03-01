@@ -199,7 +199,7 @@ def CPT_2(theData, child, parent1, parent2, noStates):
         for k in range(0, len(cPT)):
           if not sum == 0:
             cPT[k][i][j] = cPT[k][i][j] / sum
-    print cPT
+    #print cPT
 # End of Coursework 3 task 1           
     return cPT
 #
@@ -215,9 +215,35 @@ def ExampleBayesianNetwork(theData, noStates):
     cptList = [cpt0, cpt1, cpt2, cpt3, cpt4, cpt5]
     return arcList, cptList
 # Coursework 3 task 2 begins here
-
 # end of coursework 3 task 2
 #
+
+def HepatitisBayesianNetwork(theData, noStates):
+  
+  # dm = DependencyMatrix(theData, noVariables, noStates)
+  # dl = DependencyList(dm)
+  # st = SpanningTreeAlgorithm(dl, noVariables)
+  
+  cpt0 = Prior(theData, 0, noStates)
+  cpt1 = Prior(theData, 1, noStates)
+  cpt2 = CPT(theData, 2, 0, noStates)
+  cpt3 = CPT(theData, 3, 4, noStates)
+  cpt4 = CPT(theData, 4, 1, noStates)
+  cpt5 = CPT(theData, 5, 4, noStates)
+  cpt6 = CPT(theData, 6, 1, noStates)
+  cpt7 = CPT_2(theData, 6, 0, 1, noStates)
+  cpt8 = CPT(theData, 8, 7, noStates)
+  
+  
+  
+  arcList = [[0], [1], [2,0], [3,4], [4,1], [5,4], [6, 1], [7, 0, 1], [8, 7]]
+  cptList = [cpt0, cpt1, cpt2, cpt3, cpt4, cpt5, cpt6, cpt7, cpt8]  
+  
+  #g = createGraph(st, noVariables)
+  #g.write_png('spanning_tree_coursework_3.png')
+    
+  return arcList, cptList
+
 # Function to calculate the MDL size of a Bayesian Network
 def MDLSize(arcList, cptList, noDataPoints, noStates):
     mdlSize = 0.0
@@ -311,7 +337,6 @@ def coursework1():
   AppendString("results.txt","Coursework One Results: Jamal Khan - jzk09")
   AppendString("results.txt","") #blank line
 
-
   AppendString("results.txt","The prior probability distribution of node 0:")
   prior = Prior(theData, 0, noStates)
   AppendList("results.txt", prior)
@@ -364,6 +389,11 @@ def coursework3():
   noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
   theData = array(datain)
   cpt_2 = CPT_2(theData, 7, 1, 2, noStates)
+  h = HepatitisBayesianNetwork(theData, noStates)
+  
+  
+  
+  
 
 if __name__ == "__main__":
   coursework3()
