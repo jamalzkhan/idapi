@@ -266,7 +266,7 @@ def JointProbability(dataPoint, arcList, cptList):
       if len(arc) == 1:
         val = table[dataPoint[i]]
       elif len(arc) == 2:
-        val = table[dataPoint[arc[1]]][dataPoint[i]]
+        val = table[dataPoint[i]][dataPoint[arc[1]]]
       else:
         val = table[dataPoint[i]][dataPoint[arc[1]]][dataPoint[arc[2]]]
         
@@ -279,10 +279,17 @@ def JointProbability(dataPoint, arcList, cptList):
 def MDLAccuracy(theData, arcList, cptList):
     mdlAccuracy=0
 # Coursework 3 task 5 begins here
-
+    for i in theData:
+      j = JointProbability(i, arcList, cptList)
+      mdlAccuracy += log2(j)
 
 # Coursework 3 task 5 ends here 
     return mdlAccuracy
+
+def MDLScore(theData, noDataPoints, noStates, arcList, cptList):
+  modelSize = MDLSize(arcList, cptList, noDataPoints, noStates)
+  modelAccuracy = MDLAccuracy(theData, arcList, cptList)
+  return modelSize - modelAccuracy
 #
 # End of coursework 2
 #
@@ -293,8 +300,6 @@ def Mean(theData):
     noVariables=theData.shape[1] 
     mean = []
     # Coursework 4 task 1 begins here
-
-
 
     # Coursework 4 task 1 ends here
     return array(mean)
@@ -404,9 +409,12 @@ def coursework3():
   cpt_2 = CPT_2(theData, 7, 1, 2, noStates)
   arcList, cptList = HepatitisBayesianNetwork(theData, noStates)
   mdlSize = MDLSize(arcList, cptList, noDataPoints, noStates)
-  dataPoint = [0, 1, 1, 3, 4, 5, 6, 1, 4]
-
+  dataPoint = [0,8,0,1.8,6,0,5,0]
   jp = JointProbability(dataPoint, arcList, cptList)
+  #print jp
+  mdl = MDLAccuracy(theData, arcList, cptList)
+  modelScore = MDLScore(theData, noDataPoints, noStates, arcList, cptList)
+  print modelScore
 
 if __name__ == "__main__":
   coursework3()
