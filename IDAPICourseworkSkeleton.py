@@ -234,8 +234,6 @@ def HepatitisBayesianNetwork(theData, noStates):
   cpt7 = CPT_2(theData, 6, 0, 1, noStates)
   cpt8 = CPT(theData, 8, 7, noStates)
   
-  
-  
   arcList = [[0], [1], [2,0], [3,4], [4,1], [5,4], [6, 1], [7, 0, 1], [8, 7]]
   cptList = [cpt0, cpt1, cpt2, cpt3, cpt4, cpt5, cpt6, cpt7, cpt8]  
   
@@ -248,8 +246,12 @@ def HepatitisBayesianNetwork(theData, noStates):
 def MDLSize(arcList, cptList, noDataPoints, noStates):
     mdlSize = 0.0
 # Coursework 3 task 3 begins here
-
-
+    for i in range(0, len(noStates)):
+      tempSize = noStates[i] - 1
+      for p in arcList[i][1:]:
+        tempSize *= noStates[p]
+      mdlSize += tempSize
+    mdlSize = (mdlSize) * log2(noDataPoints)/2
 # Coursework 3 task 3 ends here 
     return mdlSize 
 #
@@ -257,7 +259,6 @@ def MDLSize(arcList, cptList, noDataPoints, noStates):
 def JointProbability(dataPoint, arcList, cptList):
     jP = 1.0
 # Coursework 3 task 4 begins here
-
 
 # Coursework 3 task 4 ends here 
     return jP
@@ -389,8 +390,9 @@ def coursework3():
   noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
   theData = array(datain)
   cpt_2 = CPT_2(theData, 7, 1, 2, noStates)
-  h = HepatitisBayesianNetwork(theData, noStates)
-  
+  arcList, cptList = HepatitisBayesianNetwork(theData, noStates)
+  mdlSize = MDLSize(arcList, cptList, noDataPoints, noStates)
+  print mdlSize
   
   
   
