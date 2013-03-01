@@ -290,11 +290,39 @@ def MDLScore(theData, noDataPoints, noStates, arcList, cptList):
   modelSize = MDLSize(arcList, cptList, noDataPoints, noStates)
   modelAccuracy = MDLAccuracy(theData, arcList, cptList)
   return modelSize - modelAccuracy
+  
+
+def removeElem(i, list):
+  new_list = list[:]
+  del new_list[i]
+  return new_list
+  
+
+def minMDL(theData, noDataPoints, noStates, arcList, cptList):
+  mini = float('inf'), -1, -1
+  for arc in arcList:
+      copyCPT = cptList[:]
+      for a in arc[1:]:
+          arc.remove(a)
+          index = arcList.index(arc)
+          copyCPT.pop(arc[0])
+          tempCPT = None
+          if len(arc) == 1:
+              tempCPT = Prior(theData, arc[0], noStates)
+          elif len(arc) == 2:
+              tempCPT = CPT(theData, arc[0], arc[1], noStates)
+          copyCPT.insert(arc[0], tempCPT)
+          score = MDLScore(theData, noDataPoints, noStates, arcList, copyCPT)
+          if mini[0] > score:
+              mini = score, arc[0], a
+          arc.append(a)
+  return mini
 #
 # End of coursework 2
 #
 # Coursework 3 begins here
 #
+
 def Mean(theData):
     realData = theData.astype(float)
     noVariables=theData.shape[1] 
@@ -303,7 +331,6 @@ def Mean(theData):
 
     # Coursework 4 task 1 ends here
     return array(mean)
-
 
 def Covariance(theData):
     realData = theData.astype(float)
@@ -409,12 +436,32 @@ def coursework3():
   cpt_2 = CPT_2(theData, 7, 1, 2, noStates)
   arcList, cptList = HepatitisBayesianNetwork(theData, noStates)
   mdlSize = MDLSize(arcList, cptList, noDataPoints, noStates)
+  
+  AppendString("results.txt","Coursework Three Results: Jamal Khan - jzk09")
+  AppendString("results.txt","") #blank line
+
+  AppendString("results.txt","The MDLSize of the network for Hepatitis C data set is:")
+  AppendString("results.txt",mdlSize)
+  AppendString("results.txt","") #blank line
+  
   dataPoint = [0,8,0,1.8,6,0,5,0]
   jp = JointProbability(dataPoint, arcList, cptList)
-  #print jp
-  mdl = MDLAccuracy(theData, arcList, cptList)
-  modelScore = MDLScore(theData, noDataPoints, noStates, arcList, cptList)
-  print modelScore
+  
+  mdlAccuracy = MDLAccuracy(theData, arcList, cptList)
+  AppendString("results.txt","The MDLAccuracy of the network for Hepatitis C data set is:")
+  AppendString("results.txt",mdlAccuracy)
+  AppendString("results.txt","") #blank line
+  
+  mdlScore = MDLScore(theData, noDataPoints, noStates, arcList, cptList)
+  AppendString("results.txt","The MDLScore of the network for Hepatitis C data set is:")
+  AppendString("results.txt",mdlScore)
+  AppendString("results.txt","") #blank line
+  
+  bestScore, nodeX, nodeY = minMDL(theData, noDataPoints, noStates, arcList, cptList)
+  
+  AppendString("results.txt","The MDLScore of the best network with one arc removed from node " + str(nodeX) + " to node " + str(nodeY) + " is:")
+  AppendString("results.txt",bestScore)
+  
 
 if __name__ == "__main__":
   coursework3()
