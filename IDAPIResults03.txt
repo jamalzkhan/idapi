@@ -1,0 +1,13 @@
+Coursework Three Results: Jamal Khan - jzk09
+
+The MDLSize of the network for Hepatitis C data set is:
+3972.430238
+
+The MDLAccuracy of the network for Hepatitis C data set is:
+-23672.1810271
+
+The MDLScore of the network for Hepatitis C data set is:
+27644.6112651
+
+The MDLScore of the best network with one arc removed from node 7 to node 1 is:
+25916.7016818
