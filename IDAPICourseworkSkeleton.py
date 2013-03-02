@@ -328,7 +328,12 @@ def Mean(theData):
     noVariables=theData.shape[1] 
     mean = []
     # Coursework 4 task 1 begins here
-
+    for i in range(0, noVariables):
+      mean.append(0.0)
+    for i in realData:
+      for j in range (0, noVariables):
+        mean[j] += i[j] / len(realData)
+      
     # Coursework 4 task 1 ends here
     return array(mean)
 
@@ -336,14 +341,39 @@ def Covariance(theData):
     realData = theData.astype(float)
     noVariables=theData.shape[1] 
     covar = zeros((noVariables, noVariables), float)
+    
     # Coursework 4 task 2 begins here
-
-
+    
+    U = realData - Mean(theData)
+    U_T = transpose(U)
+    covar = dot(U_T, U) / (len(realData) - 1)
+    
+    
     # Coursework 4 task 2 ends here
     return covar
+
+def CovarianceTwo(realData, i, j):
+  
+  sum_i = 0.0
+  sum_j = 0.0
+  sum_i_j = 0.0
+  
+  for x in realData:
+    sum_i += x[i]
+    sum_j += x[j]
+    sum_i_j += x[i] * x[j]
+    
+  covar = 1/(len(realData)-1.0) * (sum_i_j - ((sum_i*sum_j)/(len(realData))))
+  
+  return covar
+
 def CreateEigenfaceFiles(theBasis):
     adummystatement = 0 #delete this when you do the coursework
     # Coursework 4 task 3 begins here
+    
+    # Each row is an eigenface
+    
+    
 
     # Coursework 4 task 3 ends here
 
@@ -463,5 +493,15 @@ def coursework3():
   AppendString("results.txt",bestScore)
   
 
+def coursework4():
+  noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
+  theData = array(datain)
+  mean = Mean(theData)
+  #print mean
+  cov = Covariance(theData)
+  # print cov
+  theBasis = ReadEigenfaceBasis()
+  #CreateEigenfaceFiles(theBasis)
+
 if __name__ == "__main__":
-  coursework3()
+  coursework4()
