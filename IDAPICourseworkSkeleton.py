@@ -368,12 +368,17 @@ def CovarianceTwo(realData, i, j):
   return covar
 
 def CreateEigenfaceFiles(theBasis):
-    adummystatement = 0 #delete this when you do the coursework
     # Coursework 4 task 3 begins here
+    mean_data_in = ReadOneImage("MeanImage.jpg")
     
-    # Each row is an eigenface
+    print len(mean_data_in)
+    #for i in range(0,len(theBasis)):
+    #  SaveEigenface(theBasis[i], "PrincipalComponent" + str(i) + ".jpg")
     
-    
+    covar = Covariance(theBasis)
+    eigenvalues, eigenvectors = linalg.eig(covar)
+    len(covar)
+    #print eigenvalues
 
     # Coursework 4 task 3 ends here
 
@@ -501,7 +506,7 @@ def coursework4():
   cov = Covariance(theData)
   # print cov
   theBasis = ReadEigenfaceBasis()
-  #CreateEigenfaceFiles(theBasis)
+  CreateEigenfaceFiles(theBasis)
 
 if __name__ == "__main__":
   coursework4()
