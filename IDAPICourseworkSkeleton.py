@@ -352,40 +352,23 @@ def Covariance(theData):
     # Coursework 4 task 2 ends here
     return covar
 
-def CovarianceTwo(realData, i, j):
-  
-  sum_i = 0.0
-  sum_j = 0.0
-  sum_i_j = 0.0
-  
-  for x in realData:
-    sum_i += x[i]
-    sum_j += x[j]
-    sum_i_j += x[i] * x[j]
-    
-  covar = 1/(len(realData)-1.0) * (sum_i_j - ((sum_i*sum_j)/(len(realData))))
-  
-  return covar
-
 def CreateEigenfaceFiles(theBasis):
     # Coursework 4 task 3 begins here
     mean_data_in = ReadOneImage("MeanImage.jpg")
     
     print len(mean_data_in)
-    #for i in range(0,len(theBasis)):
-    #  SaveEigenface(theBasis[i], "PrincipalComponent" + str(i) + ".jpg")
-    
-    covar = Covariance(theBasis)
-    eigenvalues, eigenvectors = linalg.eig(covar)
-    len(covar)
-    #print eigenvalues
+    for i in range(0,len(theBasis)):
+      SaveEigenface(theBasis[i], "PrincipalComponent" + str(i) + ".jpg")
 
     # Coursework 4 task 3 ends here
 
 def ProjectFace(theBasis, theMean, theFaceImage):
     magnitudes = []
     # Coursework 4 task 4 begins here
-
+    theFaceImageData = ReadOneImage(theFaceImage)
+    tr = transpose(theBasis)
+    magnitudes = dot((theFaceImageData - theMean), tr)
+    
     # Coursework 4 task 4 ends here
     return array(magnitudes)
 
@@ -501,12 +484,13 @@ def coursework3():
 def coursework4():
   noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
   theData = array(datain)
-  mean = Mean(theData)
-  #print mean
+  theMean = Mean(theData)
+  
   cov = Covariance(theData)
-  # print cov
   theBasis = ReadEigenfaceBasis()
-  CreateEigenfaceFiles(theBasis)
+  #CreateEigenfaceFiles(theBasis)
+  theFaceImage = "c.pgm"
+  projectFace = ProjectFace(theBasis, Mean(theBasis), theFaceImage)
 
 if __name__ == "__main__":
   coursework4()
