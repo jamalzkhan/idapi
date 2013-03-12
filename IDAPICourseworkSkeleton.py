@@ -343,12 +343,9 @@ def Covariance(theData):
     covar = zeros((noVariables, noVariables), float)
     
     # Coursework 4 task 2 begins here
-    
     U = realData - Mean(theData)
     U_T = transpose(U)
     covar = dot(U_T, U) / (len(realData) - 1)
-    
-    
     # Coursework 4 task 2 ends here
     return covar
 
@@ -380,6 +377,7 @@ def CreatePartialReconstructions(aBasis, aMean, magnitudes):
 def CreatePartialReconstruction(aBasis, aMean, aComponent):
   return dot(transpose(aBasis), aComponent) - aMean
 
+
 def PrincipalComponents(theData):
     orthoPhi = []
     # Coursework 4 task 3 begins here
@@ -387,7 +385,26 @@ def PrincipalComponents(theData):
     # data has so many variables you need to use the Kohonen Lowe method described in lecture 15
     # The output should be a list of the principal components normalised and sorted in descending 
     # order of their eignevalues magnitudes
+    mean = Mean(theData)
     
+    U = theData - mean
+    U_T= transpose(U)
+    U_U_T = dot(U, U_T)
+    
+    # these need to be normalised
+    eigenValues , eigenVectors = linalg.eig(U_U_T)
+    tempMatrix = dot(U_T, eigenVectors)
+    tempMatrix = tempMatrix.transpose()
+    
+    for i in range(0, len(tempMatrix)):
+      magnitude = sqrt(dot(tempMatrix[i], transpose(tempMatrix[i])))
+      tempMatrix[i] /= magnitude
+    
+    data = zip(eigenValues, tempMatrix)
+    list.sort(data, reverse = True)
+    eV, result = zip(*data)
+    
+    orthoPhi = result
     # Coursework 4 task 6 ends here
     return array(orthoPhi)
 
@@ -487,16 +504,23 @@ def coursework4():
   #theData = array(datain)
   #cov = Covariance(theData)
   
-  
   theBasis = ReadEigenfaceBasis()
   aMean = array(ReadOneImage("MeanImage.jpg"))
   CreateEigenfaceFiles(theBasis)
   theFaceImage = "c.pgm"
-  magnitudes = ProjectFace(theBasis, aMean, theFaceImage)
-  CreatePartialReconstructions(theBasis, aMean, magnitudes)
-  PrincipalComponents()
+  #magnitudes = ProjectFace(theBasis, aMean, theFaceImage)
+  #theNewBasis = PrincipalComponents(imageData)
+  #CreatePartialReconstructions(theBasis, aMean, magnitudes)
+  
   imageData = array(ReadImages())
-  PrincipalComponents(imageData)
+  newMean = Mean(imageData)
+  
+  theNewBasis = PrincipalComponents(imageData)
+  newMagnitudes = ProjectFace(theNewBasis, newMean, theFaceImage)
+  
+  CreatePartialReconstructions(theNewBasis, newMean, newMagnitudes)
+
+
 
 if __name__ == "__main__":
   coursework4()
