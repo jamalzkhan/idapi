@@ -504,6 +504,13 @@ def coursework4():
   #theData = array(datain)
   #cov = Covariance(theData)
   
+  AppendString("results.txt","Coursework Three Results: Jamal Khan - jzk09")
+  AppendString("results.txt","") #blank line
+  
+  hepatitisMean = Mean(array(datain))
+  AppendString("results.txt","The mean set for HepatitisC data set:")
+  AppendString("results.txt", hepatitisMean)
+  
   theBasis = ReadEigenfaceBasis()
   aMean = array(ReadOneImage("MeanImage.jpg"))
   CreateEigenfaceFiles(theBasis)
