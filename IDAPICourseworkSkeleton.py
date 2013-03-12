@@ -354,11 +354,9 @@ def Covariance(theData):
 
 def CreateEigenfaceFiles(theBasis):
     # Coursework 4 task 3 begins here
-    mean_data_in = ReadOneImage("MeanImage.jpg")
-    
-    print len(mean_data_in)
     for i in range(0,len(theBasis)):
-      SaveEigenface(theBasis[i], "PrincipalComponent" + str(i) + ".jpg")
+      name = "PrincipalComponent" + str(i) + ".jpg"
+      SaveEigenface(theBasis[i], name)
 
     # Coursework 4 task 3 ends here
 
@@ -368,15 +366,19 @@ def ProjectFace(theBasis, theMean, theFaceImage):
     theFaceImageData = ReadOneImage(theFaceImage)
     tr = transpose(theBasis)
     magnitudes = dot((theFaceImageData - theMean), tr)
-    
     # Coursework 4 task 4 ends here
     return array(magnitudes)
 
-def CreatePartialReconstructions(aBasis, aMean, componentMags):
-    adummystatement = 0  #delete this when you do the coursework
+def CreatePartialReconstructions(aBasis, aMean, magnitudes):
     # Coursework 4 task 5 begins here
-
+    SaveEigenface(aMean, "Reconstructed_0" + ".jpg")
+    for i in range(1, len(magnitudes)):
+      reconstruction = dot(transpose(aBasis[0:i]), magnitudes[0:i]) + aMean
+      SaveEigenface(reconstruction, "Reconstructed_"+str(i)+".jpg")      
     # Coursework 4 task 5 ends here
+
+def CreatePartialReconstruction(aBasis, aMean, aComponent):
+  return dot(transpose(aBasis), aComponent) - aMean
 
 def PrincipalComponents(theData):
     orthoPhi = []
@@ -385,7 +387,6 @@ def PrincipalComponents(theData):
     # data has so many variables you need to use the Kohonen Lowe method described in lecture 15
     # The output should be a list of the principal components normalised and sorted in descending 
     # order of their eignevalues magnitudes
-
     
     # Coursework 4 task 6 ends here
     return array(orthoPhi)
@@ -483,14 +484,22 @@ def coursework3():
 
 def coursework4():
   noVariables, noRoots, noStates, noDataPoints, datain = ReadFile("HepatitisC.txt")
-  theData = array(datain)
-  theMean = Mean(theData)
+  #theData = array(datain)
+  #cov = Covariance(theData)
   
-  cov = Covariance(theData)
+  
   theBasis = ReadEigenfaceBasis()
-  #CreateEigenfaceFiles(theBasis)
+  aMean = array(ReadOneImage("MeanImage.jpg"))
+  CreateEigenfaceFiles(theBasis)
   theFaceImage = "c.pgm"
-  projectFace = ProjectFace(theBasis, Mean(theBasis), theFaceImage)
+  magnitudes = ProjectFace(theBasis, aMean, theFaceImage)
+  
+  CreatePartialReconstructions(theBasis, aMean, magnitudes)
+  #fourPointFive(theBasis, Mean(theBasis), projectFace)
+  
+  #print file_names
+  #for component in file_names:
+  #  CreatePartialReconstructions(theBasis, Mean(theBasis), ProjectFace(theBasis, Mean(theBasis), component))
 
 if __name__ == "__main__":
   coursework4()
