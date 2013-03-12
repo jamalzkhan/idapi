@@ -493,13 +493,10 @@ def coursework4():
   CreateEigenfaceFiles(theBasis)
   theFaceImage = "c.pgm"
   magnitudes = ProjectFace(theBasis, aMean, theFaceImage)
-  
   CreatePartialReconstructions(theBasis, aMean, magnitudes)
-  #fourPointFive(theBasis, Mean(theBasis), projectFace)
-  
-  #print file_names
-  #for component in file_names:
-  #  CreatePartialReconstructions(theBasis, Mean(theBasis), ProjectFace(theBasis, Mean(theBasis), component))
+  PrincipalComponents()
+  imageData = array(ReadImages())
+  PrincipalComponents(imageData)
 
 if __name__ == "__main__":
   coursework4()
